@@ -1,6 +1,7 @@
 package com.example.pract2_2_v3_grebenukov.presentation
 
 import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.pract2_2_v3_grebenukov.R
@@ -13,5 +14,13 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.btnToListActivity.setOnClickListener {
+            val intent = Intent(this, HealthListInfoActivity::class.java)
+            startActivity(intent)
+        }
+        binding.btnAddInfo.setOnClickListener {
+            val intent = Intent(this, AddHealthInfoActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

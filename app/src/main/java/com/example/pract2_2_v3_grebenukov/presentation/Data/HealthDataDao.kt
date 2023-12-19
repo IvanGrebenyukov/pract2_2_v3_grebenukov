@@ -15,4 +15,7 @@ interface HealthDataDao {
 
     @Delete
     suspend fun deleteHealthData(healthData: HealthData)
+
+    @Query("SELECT * FROM health_data WHERE id = :id")
+    suspend fun getHealthDataById(id: Int): HealthData?
 }

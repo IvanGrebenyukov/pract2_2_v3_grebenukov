@@ -14,6 +14,7 @@
         app:layout_boxedEdges="all"
         android:background="@color/black">
         <ImageButton
+            android:id="@+id/btnAddInfo"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/baseline_add_circle"
@@ -29,6 +30,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginStart="65dp"/>
         <ImageButton
+            android:id="@+id/btnToListActivity"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/baseline_healing"

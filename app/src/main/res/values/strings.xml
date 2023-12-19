@@ -9,4 +9,16 @@
     <string name="example_login">login</string>
     <string name="add_info">Добавить информацию</string>
     <string name="check_info">Посмотреть информацию</string>
+    <string name="date">Дата</string>
+    <string name="date_example">19.12.2023</string>
+    <string name="systolicPressure">Систолическое давление</string>
+    <string name="systolicPressure_example">120</string>
+    <string name="diastolicPressure">Диастолическое давление</string>
+    <string name="diastolicPressure_example">70</string>
+    <string name="calories_burned">Потрачено калорий</string>
+    <string name="calories_burned_example">2000</string>
+    <string name="calories_received">Получено калорий</string>
+    <string name="calories_received_example">2500</string>
+    <string name="hours_sleep">Часы сна</string>
+    <string name="hours_sleep_example">8</string>
 </resources>
