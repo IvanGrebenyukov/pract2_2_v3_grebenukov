@@ -60,7 +60,7 @@ class AddHealthInfoActivity : Activity() {
     }
     fun onSaveHealthInfo(){
             binding.apply {
-                val date = edDate.text.toString()
+                val  date= edDate.text.toString()
                 val systolicPressure = edSystolicPressure.text.toString()
                 val diastolicPressure = edDiastolicPressure.text.toString()
                 val caloriesBurned = edCalorieBurned.text.toString()
@@ -144,10 +144,6 @@ class AddHealthInfoActivity : Activity() {
         }
     }
 
-    private fun updateHealthDataInDatabase() {
-
-
-    }
     private fun populateFieldsWithHealthData(healthData: HealthData) {
         binding.apply {
             binding.edDate.setText(healthData.date)
