@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.icu.util.Calendar
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.room.Room
 import com.example.pract2_2_v3_grebenukov.databinding.ActivityAddHealthInfoBinding
@@ -19,7 +20,9 @@ import java.util.Locale
 class AddHealthInfoActivity : Activity() {
     private lateinit var binding: ActivityAddHealthInfoBinding
     private lateinit var healthDataDao: HealthDataDao
-    private var healthDataId: Int = -1
+    private lateinit var healthData: HealthData
+    private var isEditMode = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddHealthInfoBinding.inflate(layoutInflater)
@@ -33,7 +36,13 @@ class AddHealthInfoActivity : Activity() {
             showDatePicker()
         }
         binding.btnAddInfo.setOnClickListener {
-            onSaveHealthInfo()
+                onSaveHealthInfo()
+        }
+        if (intent.getBooleanExtra("EDIT_MODE", false)) {
+            isEditMode = true
+            healthData = intent.getSerializableExtra("HEALTH_DATA") as HealthData
+            populateFieldsWithHealthData(healthData)
+            binding.btnAddInfo.text = "Изменить данные"
         }
     }
     private fun showDatePicker(){
@@ -50,51 +59,78 @@ class AddHealthInfoActivity : Activity() {
         ).show()
     }
     fun onSaveHealthInfo(){
-        binding.apply {
-            val date = edDate.text.toString()
-            val systolicPressure = edSystolicPressure.text.toString()
-            val diastolicPressure = edDiastolicPressure.text.toString()
-            val caloriesBurned = edCalorieBurned.text.toString()
-            val caloriesReceived = edCalorieReceived.text.toString()
-            val hoursSleep = edHoursSleep.text.toString()
-            var calories = 0
-            if(caloriesBurned.toInt() > caloriesReceived.toInt()){
-                calories = caloriesBurned.toInt() - caloriesReceived.toInt()
-            }
-            else{
-                calories = caloriesReceived.toInt() - caloriesBurned.toInt()
-            }
-            if(date.isNotEmpty() &&
-                systolicPressure.isNotEmpty() &&
-                diastolicPressure.isNotEmpty() &&
-                caloriesBurned.isNotEmpty() &&
-                caloriesReceived.isNotEmpty() &&
-                hoursSleep.isNotEmpty()){
-                val healthData = HealthData(
-                    date = date,
-                    systolicPressure = systolicPressure.toInt(),
-                    diastolicPressure = diastolicPressure.toInt(),
-                    calories = calories,
-                    sleepDuration = hoursSleep.toInt()
-                )
-                GlobalScope.launch(Dispatchers.IO) {
-                    try{
-                        healthDataDao.insertHealthData(healthData)
-
-                        runOnUiThread{
-                            Toast.makeText(this@AddHealthInfoActivity, "Данные успешно сохранены", Toast.LENGTH_SHORT).show()
-                            clearFields()
+            binding.apply {
+                val date = edDate.text.toString()
+                val systolicPressure = edSystolicPressure.text.toString()
+                val diastolicPressure = edDiastolicPressure.text.toString()
+                val caloriesBurned = edCalorieBurned.text.toString()
+                val caloriesReceived = edCalorieReceived.text.toString()
+                val hoursSleep = edHoursSleep.text.toString()
+                var calories = 0
+                if(caloriesBurned.toInt() > caloriesReceived.toInt()){
+                    calories = caloriesBurned.toInt() - caloriesReceived.toInt()
+                }
+                else{
+                    calories = caloriesReceived.toInt() - caloriesBurned.toInt()
+                }
+                if(date.isNotEmpty() &&
+                    systolicPressure.isNotEmpty() &&
+                    diastolicPressure.isNotEmpty() &&
+                    caloriesBurned.isNotEmpty() &&
+                    caloriesReceived.isNotEmpty() &&
+                    hoursSleep.isNotEmpty()){
+                    if (isEditMode){
+                        val updatedHealthData = HealthData(
+                            id = healthData.id,
+                            date = date,
+                            systolicPressure = systolicPressure.toInt(),
+                            diastolicPressure = diastolicPressure.toInt(),
+                            calories = calories,
+                            sleepDuration = hoursSleep.toInt()
+                        )
+                        GlobalScope.launch(Dispatchers.IO) {
+                            try {
+                                healthDataDao.updateHealthData(updatedHealthData)
+                                runOnUiThread {
+                                    Toast.makeText(this@AddHealthInfoActivity, "Данные успешно обновлены", Toast.LENGTH_SHORT).show()
+                                    finish()
+                                }
+                            } catch (e: Exception) {
+                                runOnUiThread {
+                                    Toast.makeText(this@AddHealthInfoActivity, "Ошибка обновления данных", Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         }
-                    } catch (e: Exception){
-                        runOnUiThread{
-                            Toast.makeText(this@AddHealthInfoActivity, "Ошибка при сохранении данных", Toast.LENGTH_SHORT).show()
+                    }
+                    else{
+                        val healthData = HealthData(
+                            date = date,
+                            systolicPressure = systolicPressure.toInt(),
+                            diastolicPressure = diastolicPressure.toInt(),
+                            calories = calories,
+                            sleepDuration = hoursSleep.toInt()
+                        )
+                        GlobalScope.launch(Dispatchers.IO) {
+                            try{
+                                healthDataDao.insertHealthData(healthData)
+
+                                runOnUiThread{
+                                    Toast.makeText(this@AddHealthInfoActivity, "Данные успешно сохранены", Toast.LENGTH_SHORT).show()
+                                    clearFields()
+                                }
+                            } catch (e: Exception){
+                                runOnUiThread{
+                                    Toast.makeText(this@AddHealthInfoActivity, "Ошибка при сохранении данных", Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         }
                     }
                 }
-            } else{
-                Toast.makeText(this@AddHealthInfoActivity, "Заполните все поля", Toast.LENGTH_SHORT).show()
+                else{
+                    Toast.makeText(this@AddHealthInfoActivity, "Заполните все поля", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
+
 
     }
     private fun clearFields(){
@@ -108,22 +144,19 @@ class AddHealthInfoActivity : Activity() {
         }
     }
 
-    private fun loadAndFillData(){
-        GlobalScope.launch(Dispatchers.IO) {
-            val healthData = HealthDataDatabase.getDatabase(this@AddHealthInfoActivity)
-                .healthDataDao().getHealthDataById(healthDataId)
-            runOnUiThread{
-                healthData?.let{
-                    binding.edDate.setText(it.date)
-                    binding.edSystolicPressure.setText(it.systolicPressure.toString())
-                    binding.edDiastolicPressure.setText(it.diastolicPressure.toString())
-                    binding.edCalorieBurned.setText(it.calories.toString())
-                    binding.edCalorieReceived.setText(it.calories.toString())
-                    binding.edHoursSleep.setText(it.sleepDuration.toString())
+    private fun updateHealthDataInDatabase() {
 
-                    binding.btnAddInfo.text = "Изменить данные"
-                }
-            }
+
+    }
+    private fun populateFieldsWithHealthData(healthData: HealthData) {
+        binding.apply {
+            binding.edDate.setText(healthData.date)
+            binding.edSystolicPressure.setText(healthData.systolicPressure.toString())
+            binding.edDiastolicPressure.setText(healthData.diastolicPressure.toString())
+            binding.edCalorieBurned.setText("0")
+            binding.edCalorieReceived.setText(healthData.calories.toString())
+            binding.edHoursSleep.setText(healthData.sleepDuration.toString())
         }
+
     }
 }

@@ -5,7 +5,7 @@ import androidx.room.*
 @Dao
 interface HealthDataDao {
     @Query("SELECT * FROM health_data")
-    suspend fun getAllHealthData(): List<HealthData>
+    suspend fun getAllHealthData(): MutableList<HealthData>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHealthData(healthData: HealthData)

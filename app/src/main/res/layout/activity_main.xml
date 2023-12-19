@@ -7,44 +7,68 @@
     tools:deviceIds="wear"
     android:background="@color/black"
     tools:context=".presentation.MainActivity">
-    <FrameLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"
-        app:layout_boxedEdges="all"
-        android:background="@color/black">
-        <ImageButton
-            android:id="@+id/btnAddInfo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/baseline_add_circle"
-            android:background="@drawable/buttons"
-            android:layout_marginStart="10dp"
-            android:onClick="first" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_info"
-            android:textSize="11sp"
-            android:textColor="@color/white"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="65dp"/>
-        <ImageButton
-            android:id="@+id/btnToListActivity"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/baseline_healing"
-            android:background="@drawable/buttons"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="70dp"
-            android:onClick="second"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/check_info"
-            android:textSize="11sp"
-            android:textColor="@color/white"
-            android:layout_marginTop="80dp"
-            android:layout_marginStart="65dp"/>
-    </FrameLayout>
+        app:layout_boxedEdges="all">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            app:layout_boxedEdges="all"
+            android:background="@color/black">
+            <ImageButton
+                android:id="@+id/btnAddInfo"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/baseline_add_circle"
+                android:background="@drawable/buttons"
+                android:layout_marginStart="10dp"
+                android:onClick="first" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_info"
+                android:textSize="11sp"
+                android:textColor="@color/white"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="65dp"/>
+            <ImageButton
+                android:id="@+id/btnToListActivity"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/baseline_healing"
+                android:background="@drawable/buttons"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="70dp"
+                android:onClick="second"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="65dp"
+                android:layout_marginTop="80dp"
+                android:text="@string/check_info"
+                android:textColor="@color/white"
+                android:textSize="11sp" />
+            <ImageButton
+                android:id="@+id/btnToRecommendationsActivity"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/baseline_book"
+                android:background="@drawable/buttons"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="140dp"
+                android:onClick="second"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recommendations"
+                android:textSize="11sp"
+                android:textColor="@color/white"
+                android:layout_marginTop="150dp"
+                android:layout_marginStart="65dp"/>
+        </FrameLayout>
+    </ScrollView>
+
 </androidx.wear.widget.BoxInsetLayout>

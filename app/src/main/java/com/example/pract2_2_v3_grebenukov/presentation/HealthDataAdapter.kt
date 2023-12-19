@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pract2_2_v3_grebenukov.R
 import com.example.pract2_2_v3_grebenukov.presentation.Data.HealthData
 
-class HealthDataAdapter(private val healthDataList: List<HealthData>,
-    private  val editClickListener: (HealthData) -> Unit,
-    private  val deleteClickListener: (HealthData) -> Unit) :
+class HealthDataAdapter(private val healthDataList: MutableList<HealthData>) :
     RecyclerView.Adapter<HealthDataAdapter.HealthDataViewHolder>() {
 
+    lateinit var editClickListener: ((HealthData) -> Unit)
+    lateinit var deleteClickListener: ((HealthData) -> Unit)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HealthDataViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_item_health_data, parent, false)
@@ -28,6 +28,14 @@ class HealthDataAdapter(private val healthDataList: List<HealthData>,
             "Давление: ${currentItem.systolicPressure}/${currentItem.diastolicPressure}"
         holder.textViewCalories.text = "Калории: ${currentItem.calories}"
         holder.textViewSleepDuration.text = "Сон: ${currentItem.sleepDuration} часов"
+
+        holder.imageButtonEdit.setOnClickListener {
+            editClickListener.invoke(currentItem)
+        }
+
+        holder.imageButtonDelete.setOnClickListener {
+            deleteClickListener.invoke(currentItem)
+        }
     }
 
     override fun getItemCount(): Int {
